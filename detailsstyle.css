@@ -1,0 +1,14 @@
+body{
+    background-image: url("img/img2.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    color: orangered;
+    font-weight: bold;
+    font-size: 25px;
+}
+h2{
+    color:blue;
+    text-align: center;
+    font-size: 35px;
+}

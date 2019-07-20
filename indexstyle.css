@@ -1,0 +1,16 @@
+body {
+  background-image: url("img/img3.png");
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+  text-align: left;
+  color:navy;
+  size: 200px;
+}
+
+h1 {
+  color: gold;
+  text-align: center;
+  text-shadow: darkgray;
+
+}
