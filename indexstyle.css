@@ -1,16 +1,58 @@
 body {
-  background-image: url("img/img3.png");
-  background-position: center; /* Center the image */
+   /* background-image: url("img/10.jpg");   */
+  /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover; /* Resize the background image to cover the entire container */
-  text-align: left;
   color:navy;
   size: 200px;
 }
 
 h1 {
+  text-align:center;
   color: gold;
+  font-family: serif;
+  font-size: 40px;
   text-align: center;
-  text-shadow: darkgray;
+  font-weight: italic;
 
 }
+a{
+  color:whitesmoke;
+}
+/* Split the screen in half */
+.split {
+  height: 70%;
+  width: 50%;
+  position: fixed;
+  z-index: 1;
+  top: 40;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+/* Control the left side */
+.left {
+  left: 0;
+  background-color: green;
+}
+
+/* Control the right side */
+.right {
+  right: 0;
+  background-color:goldenrod;
+}
+
+/* If you want the content centered horizontally and vertically */
+/* .centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/* Style the image inside the centered container, if needed */
+/* .centered img {
+  width: 150px;
+  border-radius: 50%;
+}  */

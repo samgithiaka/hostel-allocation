@@ -1,0 +1,111 @@
+<html>
+<body>
+       
+<style>
+    table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 15px;
+}
+
+table {
+    border-spacing: 5px;
+}
+
+</style>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script> 
+<script type="text/javascript" src="tablesort.js"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyANUhlpi6_SCx9ZyTvvk1hOiBgJ7yesCqY",
+    authDomain: "corruptionwhistleblowerapp.firebaseapp.com",
+    databaseURL: "https://corruptionwhistleblowerapp.firebaseio.com",
+    projectId: "corruptionwhistleblowerapp",
+    storageBucket: "corruptionwhistleblowerapp.appspot.com",
+    messagingSenderId: "586134680506"
+  };
+  firebase.initializeApp(config);
+</script>
+
+<head>
+        <link rel="stylesheet" type="text/css" href="css/tablesort.css">
+        <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <title>Corruption Whistleblower app admin panel</title>
+    </head>
+    <!-- <input type="button" value="print reports" name="report-generator" id="rep"/> -->
+    
+    <button type="button" onclick="printFunction()">
+            Print Form
+         </button>
+    <table style="width:100%" class="table-sort table-sort-search table-sort-show-search-count" id="ex-table">
+        <thead>
+  <tr id="tr">
+        <th>Case Serial No:</th>
+        <th class="table-sort">Date:</th>
+    <th>Report:</th>
+    <th>BadgeNo:</th> 
+    <!-- <th>Image:</th> -->
+    <th>location:</th>
+    <th>full Name:</th>
+    <th>Email:</th>
+</thead>
+<tbody>
+
+</tbody>
+ </table> 
+
+<script>
+    
+    var database = firebase.database();
+    var myKey=database.ref().child("Reports");
+       myKey.once('value', function(snapshot){
+        if(snapshot.exists())
+            var content = '';
+                          
+            snapshot.forEach(function(data){
+                var val = data.val();
+                content +='<tr>';
+                content += '<td>' + val.caseSerialNo + '</td>';
+                content += '<td>' + val.date + '</td>';
+                content += '<td>' + val.report + '</td>';
+                content += '<td>' + val.badgeNo + '</td>';
+                //content += '<td>' + val.image + '</td>';
+                content += '<td>' + val.location + '</td>';
+                content += '<td>' + val.name + '</td>';
+                content += '<td>' + val.email + '</td>';
+                content += '</tr>';
+            });
+            $('#ex-table').append(content);
+           
+
+        }
+     
+    );
+</script>
+ <!-- <script src="print.js"></script>
+ <link rel="stylesheet" type="text/css" href="print.css"> -->
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script> 
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script> 
+<script type="text/javascript" src="tablesort.js"></script> 
+<script type="text/javascript">
+            // For Demo Purposes
+            $(function () {
+                $('table.table-sort').tablesort();
+                hljs.initHighlightingOnLoad(); // Syntax Hilighting
+            });
+        </script>
+    
+            
+             <script>
+                    function printFunction() {
+                      window.print();
+                    }
+                    </script>
+</body>
+</html>

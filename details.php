@@ -1,14 +1,18 @@
 <?php
  ob_start();
-  
- if(!isset($_SESSION['user'])){
+   
+ require_once 'connection.php';
+  require_once 'session2.php';
+
+  if(!isset($_SESSION['username'])){
    header("Location:index.php");
 }
 
  $error = false;
  
  if ( isset($_POST['btn-next']) ) {
-  
+ 
+
   // clean user inputs to prevent sql injections
   $fname = trim($_POST['fname']);
   $fname = strip_tags($fname);
@@ -34,7 +38,7 @@
   $email = strip_tags($email);
   $email = htmlspecialchars($email);
 
-   $Gender = trim($_POST['Gender']);
+   $Gender = trim($_POST['gender']);
   $Gender = strip_tags($Gender);
   $Gender = htmlspecialchars($Gender);
 
@@ -109,7 +113,7 @@ if ($uploadOk == 0) {
    if (!preg_match('/^[0-9]*$/', $phone_no)) {
         $error=true;
 $phone_noError = "please enter a numeric value";
-    } elseif(strlen($phone_no) < 10){
+    }elseif(strlen($phone_no) < 10){
       $error=true;
       $phone_noError= "Phone number is too short";
     }elseif(strlen($phone_no) > 10){
@@ -159,13 +163,19 @@ if( !$error ) {
 } }
 ?>
 <!DOCTYPE html>
-<html>
-<link rel="stylesheet" href="detailsstyle.css" type="text/css" />
+<head>
+  <HEAD>
+  <link class="jsbin" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+<meta charset=utf-8 />
+<link rel="stylesheet" href="detailsstyle.css" type="text/css" /> 
+</head>
 <body>
-<h2>Please enter your details in the personal details table below</h2>
-
  <div id="details-form">
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off">
+ <!-- <div class="container">  -->
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" id="contact" enctype="multipart/form-data" autocomplete="off">
+    <h3>PERSONAL DETAILS</h3>
     
      <div class="col-md-12">
         
@@ -195,8 +205,8 @@ if( !$error ) {
             </label>
              <div class="form-group">
              <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-            <input type="text" name="fname" required autocomplete="off"/>
+                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+            <input type="text" class="form-control" name="fname" value="<?php echo $fname ?>" required autocomplete="off"/>
           </div>
           <span class="text-danger"><?php echo $fnameError; ?></span>
  </div>
@@ -206,8 +216,8 @@ if( !$error ) {
             </label>
              <div class="form-group">
              <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-            <input type="text" name="lname" required autocomplete="off"/>
+                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+            <input type="text" class="form-control" name="lname" value="<?php echo $lname ?>" required autocomplete="off"/>
           </div>
 <span class="text-danger"><?php echo $lnameError; ?></span>
            </div>
@@ -218,7 +228,7 @@ if( !$error ) {
              <div class="form-group">
              <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-            <input type="character" name="admin_no" required autocomplete="off"/>
+            <input type="text" class="form-control" name="admin_no" required autocomplete="off"/>
           </div>
           
             <label>
@@ -228,46 +238,90 @@ if( !$error ) {
            <div class="form-group">
              <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-            <input type="text" name="ID_no" required autocomplete="off"/>
+            <input type="text" class="form-control" name="ID_no" value="<?php echo $ID_no ?>" required autocomplete="off"/>
           </div>
-          
-          
+          <span class="text-danger"><?php echo $ID_noError; ?></span>
+           </div> 
+
             <label>
               Phone number<span class="req">*</span>
             </label>
              <div class="form-group">
              <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-            <input type="integer" name="phone_no" required autocomplete="off"/>
+            <input type="integer" class="form-control" name="phone_no" value= "<?php echo $phone_no ?>" required autocomplete="off"/>
           </div>
-          
+          <span class="text-danger"><?php echo $phone_noError; ?></span>
+           </div>
+
             <label>
               Email address<span class="req">*</span>
             </label>
-
            <div class="form-group">
              <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-            <input type="character" name="email" required autocomplete="off"/>
+            <input type="character" class="form-control" name="email" value="<?php echo $email ?>" required autocomplete="off"/>
           </div>
-          
-            <label>
-              Gender<span class="req">*</span>
+           <span class="text-danger"><?php echo $emailError; ?></span>
+           </div>
+           
+<label>
+              Select Gender<span class="req">*</span>
             </label>
              <div class="form-group">
              <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-            <input type="text" name="Gender" required autocomplete="off"/>
+            <select name="gender">
+  <option value="MALE" name="male" >MALE</option>
+  <option value="FEMALE" name="FEMALE">FEMALE</option>/>
+  
+</select>
           </div>
-
           <label>
               disabled
             </label>
           
              <div class="form-group">
+             <input type="checkbox"  name="disabled" id="myCheck"  onclick="myFunction()" /></br>
+              <p id="text" style="display:none">
+              
+              Select image to upload:
+    <input type="file" name="fileToUpload" 
+    onchange="readURL(this);" id="fileToUpload">
+              <img id="blah" src="#" width="50" height="50"/>
             
-                
-            <input type="checkbox" value="1" name="disabled" checked="FALSE" />
+              </p>
+              <script>
+                function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#blah')
+                    .attr('src', e.target.result)
+                    .width(50)
+                    .height(50);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+                </script>
+                <form action="upload.php" method="post" enctype="multipart/form-data"> 
+                <script>
+function myFunction() {
+  var checkBox = document.getElementById("myCheck");
+  var text = document.getElementById("text");
+  if (checkBox.checked == true){
+    text.style.display = "block";
+  } else {
+     text.style.display = "none";
+  }
+}
+</script>
+    
+    <input type="submit" value="Upload Image" name="submit"> 
+</form>
+           
 
           </div>
          
@@ -278,7 +332,110 @@ if( !$error ) {
             
  
 </form>
-    
 </body>
+<!-- <label>
+              First Name<span class="req">*</span>
+            </label>
+            <fieldset>
+      <input type="text" tabindex="1" name="fname" value="<?php echo $fname ?>" required autofocus>
+      <span class="text-danger"><?php echo $fnameError; ?></span>
+    </fieldset>
+
+<label>
+              Last Name
+            </label>  
+            <fieldset>
+      <input type="text" tabindex="2" name="lname" value="<?php echo $lname ?>" required autofocus>
+      <span class="text-danger"><?php echo $lnameError; ?></span>
+    </fieldset>
+
+     <label>
+              Admission number
+            </label>
+            <fieldset>
+      <input tabindex="3" type="text"  name="admin_no" required>
+    </fieldset>
+
+
+    <label>
+              Email address
+            </label>
+    <fieldset>
+      <input type="email" tabindex="4" name="email" value="<?php echo $email ?>" required>
+      <span class="text-danger"><?php echo $emailError; ?></span>
+    </fieldset>
+
+    <label>
+              Phone number
+            </label>
+    <fieldset>
+      <input type="tel" tabindex="5" name="phone_no" value= "<?php echo $phone_no ?>" required>
+      <span class="text-danger"><?php echo $phone_noError; ?></span>
+    </fieldset>
+    <label>
+              ID number
+            </label>
+            <fieldset>
+      <input type="" tabindex="6" name="ID_no" value="<?php echo $ID_no ?>" required autocomplete="off">
+      <span class="text-danger"><?php echo $ID_noError; ?></span>
+    </fieldset>
+
+
+    <label>
+              Select Gender
+            </label>
+    <fieldset>
+    <select name="gender">
+  <option value="MALE" name="male" tabindex="7">MALE</option>
+  <option value="FEMALE" name="FEMALE">FEMALE</option>/>
+</select>
+    </fieldset>
+
+    <label>
+              disabled
+            </label>
+    <fieldset>
+    <input type="checkbox"  name="disabled" id="myCheck" tabindex="8"  onclick="myFunction()" /></br>
+              <p id="text" style="display:none">
+              
+              Select image to upload:
+    <input type="file" name="fileToUpload" 
+    onchange="readURL(this);" id="fileToUpload">
+              <img id="blah" src="#" width="50" height="50"/>
+            
+              </p>
+              <script>
+                function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#blah')
+                    .attr('src', e.target.result)
+                    .width(50)
+                    .height(50);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+                </script>
+                <form action="upload.php" method="post" enctype="multipart/form-data"> 
+                <script>
+function myFunction() {
+  var checkBox = document.getElementById("myCheck");
+  var text = document.getElementById("text");
+  if (checkBox.checked == true){
+    text.style.display = "block";
+  } else {
+     text.style.display = "none";
+  }
+}
+</script>
+    
+    </fieldset>
+    <fieldset>
+      <button name="submit" type="submit" name="btn-next" id="contact-submit" data-submit="...Sending">NEXT</button>
+    </fieldset>
+</body> -->
 </html>
 <?php ob_end_flush(); ?>

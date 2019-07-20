@@ -1,0 +1,26 @@
+body{
+     background-image: url(""); 
+     background-repeat: no-repeat;
+    background-size: cover; 
+    font-size: 25px;
+    font-weight: bold;
+}
+button{
+  
+}
+#col-1{
+    position: relative;
+    width:50%;
+    float:left;
+    height:100%;
+    z-index: 1010101010
+
+}
+#col-2{
+    position: relative;
+    width:50%;
+    float:left;
+    height:100%;
+    z-index: 1010101010
+
+}

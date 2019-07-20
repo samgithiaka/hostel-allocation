@@ -1,0 +1,9 @@
+body {
+  background-image: url("img/nok.jpg");
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+  text-align: left;
+  color:navy;
+  font-size: 30px;
+}
