@@ -7,7 +7,7 @@
 <script type="text/javascript" src="tablesort.js"></script> 
 <link rel="stylesheet" type="text/css" href="css/tablesort.css">
 <!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> -->
-<!-- <link rel="stylesheet" href="Registerstyle.css" type="text/css" /> -->
+<link rel="stylesheet" href="Registerstyle.css" type="text/css" />
 <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
 <style>
         .split {
@@ -23,13 +23,13 @@
 /* Control the left side */
 .left {
   left: 0;
-  background-color: green;
+
 }
 
 /* Control the right side */
 .right {
   right: 0;
-  background-color:green;
+  
 }
 .button {
   font: bold 11px Arial;
@@ -61,6 +61,15 @@ body {
   text-decoration: none;
   font-size: 17px;
 }
+.btn-logout{
+  line-height: 12px;
+    font-family: tahoma;
+    margin-top: 10px;
+    margin-right: 100px;
+    position:absolute;
+    top:0;
+    right:0;
+}
 
 .topnav a:hover {
   background-color: #ddd;
@@ -80,6 +89,7 @@ body {
   <a  href="unregister.php">UNREGISTER STUDENTS</a>
   <a href="reports.php">REPORTS</a>
   <a class="active">RESET ROOMS</a>
+  <a href="logout.php" class="btn-logout">LOGOUT</a>
 </div>
 
 <div style="padding-left:16px">
@@ -98,7 +108,11 @@ body {
   </thead>
   <tbody>
   <?php 
-  session_start();
+  include('session2.php');
+  if(!isset($_SESSION['username1'])){
+    header("Location: index.php");
+    exit;
+  }
 include "connection.php";
   $query="Select * from female_rooms";
 	$res=mysqli_query($con, $query);

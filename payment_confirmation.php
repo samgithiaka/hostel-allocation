@@ -1,9 +1,12 @@
 <?php
  ob_start();
+ 
  include('session2.php');
  
  if(!isset($_SESSION['username'])){
-   header("Location:student_login.php");
+   header("Location:index.php");
+  }elseif(!isset($_SESSION['payment'])){
+  header("Location:no_page.php");
 }
  require_once 'connection.php'; 
 
@@ -14,7 +17,7 @@
   $mpesa_code = trim($_POST['mpesa_code']);
   $mpesa_code = strip_tags($mpesa_code);
   $mpesa_code = htmlspecialchars($mpesa_code);
-$mpesa_code1="paid";
+
   if(strlen($mpesa_code) < 10){
     $error=true;
     $mpesa_code1= "unpaid";
@@ -29,12 +32,15 @@ $mpesa_code1="paid";
     $mpesa_code1= "unpaid";
     $mpesa_Error= "PLEASE ENTER MPESA VERIFICATION CODE";
   }
+  
   if( !$error ) {
-      $studid=$_SESSION['username'];
+    $mpesa_code1="paid";
+    $studid=$_SESSION['username'];
  $sql8="UPDATE `users` SET `payment_status` = '$mpesa_code1'  WHERE `user_id` ='$studid'";
     $res=mysqli_query($con,$sql8);
 
     if ($mpesa_code1=="paid") {
+      $_SESSION['confirmation']="CONFIRMED";
       header("Location:studReport.php");
       $errTyp = "success";
       $errMSG = "Successfully paid";
@@ -54,6 +60,7 @@ $mpesa_code1="paid";
 
 <div class="container-details">
 			<div class="wrap-details">
+      <p><a href="payment_details.php" class="btn-back">&#8592; BACK</a></p>
       <?php
       if ( isset($errMSG) ) {
     

@@ -1,7 +1,11 @@
 
 <?php
   ob_start();
- session_start();
+  include('session2.php');
+ if(!isset($_SESSION['username1'])){
+  header("Location: index.php");
+  exit;
+}
  include_once 'connection.php';
 
  $error = false;
@@ -34,31 +38,22 @@
     $error = true;
     $admError = "Provided Admission Number is already registered.";
    }
-  }
-  // password validation
-  // if (empty($pass)){
-  //  $error = true;
-  //  $passError = "Please enter Students ID Number";
-  // } else if(strlen($pass) < 8) {
-  //  $error = true;
-  //  $passError = "ID Number must have atleast 8 characters.";
-  // }
   
+
   // password encrypt using SHA256();
   $password = hash('sha256', $pass);
   
   // if there's no error, continue to signup
   if( !$error ) {
-//     INSERT INTO archive_table(field1, field2, field3)
-// SELECT field7, field8, field9 FROM original_table WHERE id = 1
-$query = "INSERT INTO users(fname,lname,Admission_no,ID_no,phone_no,email,Gender,Disabled,image,userPass) SELECT fname,lname,admin_no,ID_no,phone_no,email,Gender,Disabled,image,'$password' FROM personal_details WHERE admin_no='$admin_no'";
-  //  $query = "INSERT INTO users(Admission_no,userPass) VALUES('$admin_no','$password')";
+
+$query = "INSERT INTO users(fname,lname,Admission_no,ID_no,phone_no,email,Gender,nk_fname,nk_phone_no,nk_relationship,Disabled,image,userPass) 
+SELECT fname,lname,admin_no,ID_no,phone_no,email,Gender,nk_fname,nk_phone_no,nk_relationship,Disabled,image,'$password' FROM personal_details WHERE admin_no='$admin_no'";
+ 
    $res = mysqli_query($con,$query);
     
    if ($res) {
     $errTyp = "success";
     $errMSG = "Successfully registered";
-    echo "yeeeh";
     unset($admin_no);
     unset($pass);
    } else {
@@ -67,7 +62,7 @@ $query = "INSERT INTO users(fname,lname,Admission_no,ID_no,phone_no,email,Gender
     echo "DANGER";
    } 
     
-  }
+  }}
 ?>
 <!DOCTYPE html>
 <html>
@@ -94,7 +89,15 @@ body {
   overflow: hidden;
   background-color: #333;
 }
-
+.btn-logout{
+  line-height: 12px;
+    font-family: tahoma;
+    margin-top: 10px;
+    margin-right: 100px;
+    position:absolute;
+    top:0;
+    right:0;
+}
 .topnav a {
   float: left;
   color: #f2f2f2;
@@ -121,16 +124,42 @@ body {
   <a class="active">REGISTER STUDENTS</a>
   <a href="unregister.php">UNREGISTER STUDENTS</a>
   <a href="reports.php">REPORTS</a>
-  <a href="#contact">RESET ROOMS</a>
+  <a href="reset_rooms.php">RESET ROOMS</a>
+  <a href="logout.php" class="btn-logout">LOGOUT</a>
 </div>
 <div style="padding-left:16px">
  
 <div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
-			
+		
 <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off">
 				<form class="login100-form validate-form">
+        <?php
+      if ( isset($errMSG) ) {
+    
+    ?>
+    <div class="form-group">
+             <div class="alert alert-<?php echo ($errTyp=="success") ? "success" : $errTyp; ?>">
+    <span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?>
+                </div>
+             </div>
+                <?php
+   }
+   ?>
+
+<?php
+      if ( isset($admError) ) {
+    
+    ?>
+    <div class="form-group">
+             <div class="alert alert-<?php echo ($error==true) ? true : $error; ?>">
+    <span class="glyphicon glyphicon-info-sign"></span> <?php echo $admError; ?>
+                </div>
+             </div>
+                <?php
+   }
+   ?>
 					<span class="login100-form-title">
 						REGISTER STUDENTS
 					</span>

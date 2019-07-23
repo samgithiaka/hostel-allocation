@@ -1,16 +1,18 @@
 <?php
  ob_start();
- include('session2.php');
+ session_start();
  if(!isset($_SESSION['username'])){
-    header("Location:student_login.php");
- }
+    header("Location:index.php");
+ }elseif(!isset($_SESSION['apply'])){
+  header("Location:no_page.php");
+}
   require_once 'connection.php'; 
  
   $error = false;
  
   
  if ( isSET($_POST['btn-stkPush']) ) {
-  
+ 
   $phone_no1 = trim($_POST['mpesa_phone_no']);
   $phone_no1 = strip_tags($phone_no1);
   $phone_no1 = htmlspecialchars($phone_no1);
@@ -25,7 +27,7 @@
   curl_SETopt($curl, CURLOPT_URL, $url);
   curl_SETopt($curl, CURLOPT_HTTPHEADER, array(
       'Content-Type:application/json',
-      'Authorization:Bearer orI9BvctYUC3bp9qJlazSRAxMROd'
+      'Authorization:Bearer 9oNLWiTbQirNsSHJ3ZPgIDxmaHPH'
   )
   ); //SETting custom header
   
@@ -40,7 +42,7 @@
     'PartyA' => $phone_no1,
     'PartyB' => '174379',
     'PhoneNumber' => $phone_no1,
-    'CallBackURL' => 'https://5cd503d4.ngrok.io/hooks/mpesa',
+    'CallBackURL' => 'https://71b67119.ngrok.io/hooks/mpesa',
     'AccountReference' => 'test',
     'TransactionDesc' => 'test'
   );
@@ -53,9 +55,11 @@
   
   $curl_response = curl_exec($curl);
   if (strpos($curl_response, 'Success') !==false) {
+    $_SESSION['payment']="SUCCESS";
    header("Location: payment_confirmation.php");
     $errTyp3 = "success";
     $errMSG3 = "Successfully sent stkpush on phone";
+   
     echo "Success. Request accepted for processing";
    } else {
     $errTyp = "danger";
@@ -80,8 +84,11 @@
 </head>
 <body>
 <div class="container-details">
+
 			<div class="wrap-details">
+      <p><a href="apply.php" class="btn-back">&#8592; BACK</a></p>
       <div class="wrap-form">
+      
 <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off">
 
 

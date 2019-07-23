@@ -2,11 +2,13 @@
 ob_start();
 include('session2.php');
 if(!isset($_SESSION['username'])){
-   header("Location:student_login.php");
+   header("Location:index.php");
+}elseif(!isset($_SESSION['confirmation'])){
+  header("Location:no_page.php");
 }
  require_once 'connection.php'; 
 
- $error = false;
+ 
 ?>
 <!DOCTYPE html>
 <html>
@@ -15,6 +17,22 @@ if(!isset($_SESSION['username'])){
 <script type="text/javascript" src="tablesort.js"></script> 
 <link rel="stylesheet" type="text/css" href="css/styles.css">
 <link rel="stylesheet" type="text/css" href="css/tablesort.css">
+<link rel="stylesheet" href="Registerstyle.css" type="text/css" /> 
+<p><a href="payment_confirmation.php" class="btn-back">&#8592; BACK</a></p>
+<h6> <a href="logout.php" class="btn-logout">LOGOUT</a></h6>
+<style>
+h6{
+    line-height: 12px;
+    width: 18px;
+    font-size: 15pt;
+    font-family: tahoma;
+    margin-top: 10px;
+    margin-right: 100px;
+    position:absolute;
+    top:0;
+    right:0;
+}
+</style>
 <h1></h1>
    <body onload="rotateTable()">
     <button type="button" onclick="printFunction()">
@@ -35,10 +53,11 @@ if(!isset($_SESSION['username'])){
         <th>Hostel</th>
         <th>Room</th>
         <th>Duration</th>
+        <th>Allocation Date</th>
         <th>Payment Status</th>
 </thead>
   <?php 
-$studid=$_SESSION['username'];
+  $studid=$_SESSION['username'];
   $i=1;
   $query="SELECT * FROM users WHERE user_id=$studid";
 	$res=mysqli_query($con, $query);
@@ -62,6 +81,7 @@ $studid=$_SESSION['username'];
       <td><?php echo $row['Room_no'];?></td>
       <td><?php echo $row['hostel'];?></td>
       <td><?php echo $row['duration'];?></td>
+      <td><?php echo $row['allocation_date'];?></td>
       <td><?php echo $row['payment_status'];?></td>
     </tr> 
 	<?php $i++;}}else{

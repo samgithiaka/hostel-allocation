@@ -1,5 +1,6 @@
 
 <?php
+ob_start();
   include('session2.php');
 ?>
 <!DOCTYPE html>

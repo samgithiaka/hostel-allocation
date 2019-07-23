@@ -1,18 +1,21 @@
 <?php
  ob_start();
- include('session2.php');
+ session_start();
  
  if(!isset($_SESSION['username'])){
-   header("Location: student_login.php");
+   header("Location: index.php");
+   exit;
 }
  require_once 'connection.php'; 
 
  $error = false;
  if ( isset($_POST['btn-payment']) ) {
+  $_SESSION['apply']="apply";
   header("Location:payment_details.php");
+
  }
  if ( isset($_POST['btn-apply']) ) {
-
+$time=time();
 $hostel= ($_POST['hostel']);
 $duration= ($_POST['duration']);
 if( !$error ) {
@@ -21,6 +24,8 @@ if( !$error ) {
     $res=mysqli_query($con,$sql8);
      $sql11="UPDATE `users` SET `duration` = '$duration'  WHERE user_id =$studid";
     $res=mysqli_query($con,$sql11);
+    $sql12="UPDATE `users` SET `allocation_date` = '$time'  WHERE user_id =$studid";
+    $res=mysqli_query($con,$sql12);
    if ($res) {
     
     $errTyp = "success";
@@ -35,7 +40,8 @@ if( !$error ) {
 
    if ( isset($_POST['btn-checkresult']) ) {
     $studid=$_SESSION['username'];
-
+    $_SESSION['apply']="apply";
+    
     $sql7="SELECT * FROM users WHERE user_id = $studid";
     $sqlresults7=mysqli_query($con,$sql7);
     $output7=mysqli_fetch_array($sqlresults7);
@@ -114,10 +120,10 @@ $sql9="SELECT * FROM users WHERE user_id=$studid";
 }
 if($durations=="ONE MONTH"){
   $errTyp1="success";
-  $errMSG1='please pay  7000 via Mpesa';
+  $errMSG1='please pay  3500 via Mpesa';
 }elseif($durations=="TWO MONTHS"){
   $errTyp1="success";
-  $errMSG1='please pay  7000 via Mpesa';
+  $errMSG1='please pay  3500 via Mpesa';
 }elseif($durations=="THREE MONTHS"){
   $errTyp1="success";
   $errMSG1='please pay  7000 via Mpesa';
@@ -316,8 +322,10 @@ $sql9="SELECT * FROM users WHERE user_id=$studid";
          $res4=mysqli_query($con,$sql4);    
     }
     if($res1){
-      echo'<div>Room Allocated Successfully</div>';
-         
+      // echo'<div>Room Allocated Successfully</div>';
+      $errTyp2="success";
+      $errMSG2='<div id="allocated">You have been allocated '.$hostels.'Room '.$room. '</div>';
+
     }
     else{
       echo'<div>Too many people</div>';
@@ -351,63 +359,6 @@ if($durations=="ONE MONTH"){
 
 
   
- if ( isSET($_POST['btn-stkPush']) ) {
-  
-    $phone_no1 = trim($_POST['mpesa_phone_no']);
-    $phone_no1 = strip_tags($phone_no1);
-    $phone_no1 = htmlspecialchars($phone_no1);
-
-    $amount = trim($_POST['amount']);
-    $amount = strip_tags($amount);
-    $amount = htmlspecialchars($amount);
-
-    $url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
-      
-    $curl = curl_init();
-    curl_SETopt($curl, CURLOPT_URL, $url);
-    curl_SETopt($curl, CURLOPT_HTTPHEADER, array(
-        'Content-Type:application/json',
-        'Authorization:Bearer DsMf8xwGGlre6nxbRG4FxXhAVJls'
-    )
-    ); //SETting custom header
-    
-  
-    $curl_post_data = array(
-      //Fill in the request parameters with valid values
-      'BusinessShortCode' => '174379',
-      'Password' => 'MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMTkwNjE3MTY1MzAw',
-      'Timestamp' => '20190617165300',
-      'TransactionType' => 'CustomerPayBillOnline',
-      'Amount' => $amount,
-      'PartyA' => $phone_no1,
-      'PartyB' => '174379',
-      'PhoneNumber' => $phone_no1,
-      'CallBackURL' => 'https://75ea7e18.ngrok.io /hooks/mpesa',
-      'AccountReference' => 'test',
-      'TransactionDesc' => 'test'
-    );
-    
-    $data_string = json_encode($curl_post_data);
-    
-    curl_SETopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_SETopt($curl, CURLOPT_POST, true);
-    curl_SETopt($curl, CURLOPT_POSTFIELDS, $data_string);
-    
-    $curl_response = curl_exec($curl);
-    if (strpos($curl_response, 'Success') !==false) {
-     header("Location: payment_confirmation.php");
-      $errTyp = "success";
-      $errMSG = "Successfully sent stkpush on phone";
-      echo "Success. Request accepted for processing";
-     } else {
-      $errTyp = "danger";
-      $errMSG = "Something went wrong, try again later..."; 
-      echo "danger";
-     } 
-   // print_r($curl_response);
-    
-    // echo $curl_response;
-        }
 
   ?>
  <!DOCTYPE html>
@@ -421,7 +372,7 @@ if($durations=="ONE MONTH"){
   width: 50%;
   position: fixed;
   z-index: 1;
-  top: 0;
+  top: 1;
   overflow-x: hidden;
   padding-top: 0px;
   padding:30px;
@@ -442,6 +393,7 @@ if($durations=="ONE MONTH"){
 
 
         </style>
+        
 </head>
 <link rel="stylesheet" href="Registerstyle.css" type="text/css" />
 <body>
@@ -449,7 +401,7 @@ if($durations=="ONE MONTH"){
   <div class="centered">
   <div class="container-details">
 			<div class="wrap-details">
-      
+     
     <?php
       if ( isset($errMSG) ) {
     
@@ -511,7 +463,9 @@ if($durations=="ONE MONTH"){
 <div class="split right">
   <div class="centered">
   <div class="container-details">
+  
 			<div class="wrap-details">
+      
       <div class="wrap-form">
 <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off">
 <div class="form-group">

@@ -39,7 +39,15 @@ body {
   background-color: #ddd;
   color: black;
 }
-
+.btn-logout{
+  line-height: 12px;
+   font-family: tahoma;
+    margin-top: 10px;
+    margin-right: 100px;
+    position:absolute;
+    top:0;
+    right:0;
+}
 .topnav a.active {
   background-color: #4CAF50;
   color: white;
@@ -53,10 +61,20 @@ body {
 th, td {
     padding: 15px;
 }
-
-table {
-    border-spacing: 5px;
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  table * {
+    visibility: visible;
+  }
+  table {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
 }
+
 
 </style>
 
@@ -65,6 +83,7 @@ table {
   <a href="unregister.php" >UNREGISTER STUDENTS</a>
   <a class="active">REPORTS</a>
   <a href="reset_rooms.php">RESET ROOMS</a>
+  <a href="logout.php" class="btn-logout">LOGOUT</a>
 </div>
 <h1>Students Record</h1>
    
@@ -75,6 +94,7 @@ table {
     <table style="width:100%" class="table-sort table-sort-search table-sort-show-search-count" id="ex-table">
         <thead>
   <tr id="tr">
+
         <th>Serial No:</th>
         <!-- <th class="ctable-sort">Date:</th> -->
     <th>Admission Number</th>
@@ -84,17 +104,25 @@ table {
        <th>Phone</th>
         <th>Email</th>
         <th>Gender</th>
+        <th>N.K F.Name </th>
+        <th>N.K Phone</th>
+        <th>N.K Relationship</th>
         <th>Disability</th>
         <th>Image for Disabled</th>
         <th>Hostel</th>
         <th>Room</th>
         <th>Duration</th>
+        <th>Allocation Date</th>
         <th>Payment Status</th>
 </thead>
 
 
-  <?php 
+<?php 
   session_start();
+  if(!isset($_SESSION['username1'])){
+    header("Location: index.php");
+    exit;
+ }
 include "connection.php";
   $i=1;
   $query="Select * from users";
@@ -117,11 +145,15 @@ include "connection.php";
       <td><?php echo $row['phone_no'];?></td>
       <td><?php echo $row['email'];?></td>
       <td><?php echo $row['Gender'];?></td>
+      <td><?php echo $row['nk_fname'];?></td>
+      <td><?php echo $row['nk_phone_no'];?></td>
+      <td><?php echo $row['nk_relationship'];?></td>
       <td><?php echo $row['Disabled'];?></td>
       <td><?php echo $row['image'];?></td>
       <td><?php echo $row['hostel'];?></td>
       <td><?php echo $row['Room_no'];?></td>
       <td><?php echo $row['duration'];?></td>
+      <td><?php echo $row['allocation_date'];?></td>
       <td><?php echo $row['payment_status'];?></td>
     </tr> 
 	<?php $i++;}}else{
@@ -130,6 +162,7 @@ include "connection.php";
 	} ?>
   </tbody>
 </table>
+</div>
 <script type="text/javascript">
             // For Demo Purposes
             $(function () {

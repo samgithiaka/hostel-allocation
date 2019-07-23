@@ -42,7 +42,7 @@
 
    if( $count == 1 && $password==$passworddb  ) {
     echo'successssssssssssssssssss';
-    $_SESSION['username'] = $email;
+    $_SESSION['username1'] = $email;
     header("Location: admin_portal.php");
    } 
    else {

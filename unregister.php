@@ -43,7 +43,15 @@ body {
   background-color: #ddd;
   color: black;
 }
-
+.btn-logout{
+  line-height: 12px;
+    font-family: tahoma;
+    margin-top: 10px;
+    margin-right: 100px;
+    position:absolute;
+    top:0;
+    right:0;
+}
 .topnav a.active {
   background-color: #4CAF50;
   color: white;
@@ -57,6 +65,7 @@ body {
   <a class="active" >UNREGISTER STUDENTS</a>
   <a href="reports.php">REPORTS</a>
   <a href="reset_rooms.php">RESET ROOMS</a>
+  <a href="logout.php" class="btn-logout">LOGOUT</a>
 </div>
 <div style="padding-left:16px">
 <h1>Students Record</h1>
@@ -71,6 +80,10 @@ body {
   <tbody>
   <?php 
   session_start();
+  
+  if(!isset($_SESSION['username1'])){
+    header("Location:index.php");
+ }
 include "connection.php";
   $i=1;
   $query="Select * from users";
